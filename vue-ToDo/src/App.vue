@@ -2,6 +2,8 @@
 // import HelloWorld from './components/HelloWorld.vue'
 // import TheWelcome from './components/TheWelcome.vue'
 import Tasques from './components/Tasques.vue'
+var variable = "Jesus prova"
+var variable2 = {titol: "titol nou", text: "nou text per a VUE"}
 </script>
 
 <template>
@@ -10,7 +12,10 @@ import Tasques from './components/Tasques.vue'
 
     <div class="wrapper">
       <!--<HelloWorld msg="You did it!" />-->
-      <Tasques />
+      <!--<Tasques text="Prova1 primera prova entrada de text" titol="Entrada 1" />-->
+      <!--<Tasques text="Prova1 primera prova entrada de text" :titol="variable" />-->
+      <!--<Tasques text="Prova 2 text diferent per a un altra entrada" titol="Entrada 2" />-->
+      <Tasques :dades="variable2" />
     </div>
   </header>
 
