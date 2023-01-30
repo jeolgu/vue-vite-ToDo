@@ -2,8 +2,14 @@
 // import HelloWorld from './components/HelloWorld.vue'
 // import TheWelcome from './components/TheWelcome.vue'
 import Tasques from './components/Tasques.vue'
-var variable = "Jesus prova"
-var variable2 = {titol: "titol nou", text: "nou text per a VUE"}
+// var variable = "Jesus prova"
+// var variable2 = {titol: "titol nou", text: "nou text per a VUE"}
+function mostrarConsola(){
+  console.log("has fet click")
+}
+function mostrarConsola2(){
+  console.log("Has fet click en m2")
+}
 </script>
 
 <template>
@@ -15,7 +21,9 @@ var variable2 = {titol: "titol nou", text: "nou text per a VUE"}
       <!--<Tasques text="Prova1 primera prova entrada de text" titol="Entrada 1" />-->
       <!--<Tasques text="Prova1 primera prova entrada de text" :titol="variable" />-->
       <!--<Tasques text="Prova 2 text diferent per a un altra entrada" titol="Entrada 2" />-->
-      <Tasques :dades="variable2" />
+      <!--<Tasques :dades="variable2" @eventmostrar="mostrarConsola" />-->
+      <Tasques @eventMostrar="mostrarConsola" @m2="mostrarConsola2"/>
+      <!--<Tasques @miEvento="mostrar"/>-->
     </div>
   </header>
 
