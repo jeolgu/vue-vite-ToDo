@@ -7,6 +7,7 @@ import Tasques from './components/Tasques.vue'
 function mostrarConsola(){
   console.log("has fet click")
 }
+
 function mostrarConsola2(param1){
   console.log("Has fet click en m2 " + param1)
 }
