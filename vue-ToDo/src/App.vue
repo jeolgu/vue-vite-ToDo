@@ -7,8 +7,8 @@ import Tasques from './components/Tasques.vue'
 function mostrarConsola(){
   console.log("has fet click")
 }
-function mostrarConsola2(){
-  console.log("Has fet click en m2")
+function mostrarConsola2(param1){
+  console.log("Has fet click en m2 " + param1)
 }
 </script>
 
@@ -22,6 +22,7 @@ function mostrarConsola2(){
       <!--<Tasques text="Prova1 primera prova entrada de text" :titol="variable" />-->
       <!--<Tasques text="Prova 2 text diferent per a un altra entrada" titol="Entrada 2" />-->
       <!--<Tasques :dades="variable2" @eventmostrar="mostrarConsola" />-->
+      <!--<Tasques @eventMostrar="mostrarConsola" @m2="mostrarConsola2"/>-->
       <Tasques @eventMostrar="mostrarConsola" @m2="mostrarConsola2"/>
       <!--<Tasques @miEvento="mostrar"/>-->
     </div>

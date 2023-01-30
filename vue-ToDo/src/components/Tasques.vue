@@ -14,7 +14,7 @@
         emit('eventMostrar')
     }
     function metodoDelEvento(){
-        emit('m2')
+        emit('m2', 'parametre')
     }
 </script>
 
