@@ -1,16 +1,52 @@
 <script setup>
-// import HelloWorld from './components/HelloWorld.vue'
-// import TheWelcome from './components/TheWelcome.vue'
+import NovaTasca from './components/NovaTasca.vue'
 import Tasques from './components/Tasques.vue'
-// var variable = "Jesus prova"
-// var variable2 = {titol: "titol nou", text: "nou text per a VUE"}
-function mostrarConsola(){
-  console.log("has fet click")
+
+// Mètodes per a realitzar l'app Vue vite
+// CREACIO DE TASQUEST
+function comprovarErrors(descripcio, prioritat){
+  let obj = {
+      error: false,
+      msg_error: ""
+  };
+
+  obj.error = (descripcio.trim() != "" && prioritat != "") ? false : true;
+
+  if (descripcio.trim() == "") obj.msg_error = "La descripció es obligatoria \n";
+  if (prioritat.trim() == "") obj.msg_error += "La prioritat es obligatoria \n";
+
+  return obj;
+}
+function afegir(descripcio, prioritat){
+
+  let objError = comprovarErrors(descripcio.value, prioritat.value);
+  if (objError.error) return alert(objError.msg_error);
+
+  let tasques = [];
+  if (localStorage.llistaTasques) tasques = JSON.parse(localStorage.llistaTasques);
+
+  let llistaIds = tasques.map(function(a) { return a.id; });
+  let nouId = 1;
+  if(llistaIds.length > 0) {
+    let maxId = Math.max(...llistaIds);
+    nouId = maxId + 1;
+  }
+
+  tasques.push({
+      id: nouId,
+      descripcio: descripcio.value,
+      creacio: new Date(),
+      prioritat: prioritat.value,
+      completada: false
+  });
+
+  localStorage.llistaTasques = JSON.stringify(tasques);
+
+  alert("Tasca creada amb éxit");
 }
 
-function mostrarConsola2(param1){
-  console.log("Has fet click en m2 " + param1)
-}
+// LLISTAT DE TASQUES
+
 </script>
 
 <template>
@@ -18,14 +54,9 @@ function mostrarConsola2(param1){
     <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
-      <!--<HelloWorld msg="You did it!" />-->
-      <!--<Tasques text="Prova1 primera prova entrada de text" titol="Entrada 1" />-->
-      <!--<Tasques text="Prova1 primera prova entrada de text" :titol="variable" />-->
-      <!--<Tasques text="Prova 2 text diferent per a un altra entrada" titol="Entrada 2" />-->
-      <!--<Tasques :dades="variable2" @eventmostrar="mostrarConsola" />-->
-      <!--<Tasques @eventMostrar="mostrarConsola" @m2="mostrarConsola2"/>-->
-      <Tasques @eventMostrar="mostrarConsola" @m2="mostrarConsola2"/>
-      <!--<Tasques @miEvento="mostrar"/>-->
+          <!-- APP To-DO en VUE vite-->
+      <NovaTasca @afegirTasca="afegir" />
+      <Tasques />
     </div>
   </header>
 
