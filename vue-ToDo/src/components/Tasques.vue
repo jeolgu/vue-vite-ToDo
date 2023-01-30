@@ -1,75 +1,64 @@
 <script setup>
-// const props = defineProps(["text", "titol"])
-    // defineProps({
-    //     titol: String,
-    //     text: String
-    // })
-    // defineProps(["dades"])
-    // const emit = defineEmits(["eventmostrar"])
-    // function mostraLog(){
-    //     emit("eventmostrar")
-    // }
-    // import {ref} from 'vue'
+    import { ref } from 'vue'
+    // let totalTasques = 0
+    // let totalTasquesCompletades = 0
+    // let filtrat =  ""
+    const prop = defineProps(["llistaTasques"])
+    var llistat = ref(["llistat"])
+    const emit = defineEmits(["canviarPrioritat","canviarEstat", "esborrarTasca"])
 
-   
-    // const emit = defineEmits(['eventMostrar', 'm2'])
-    // var serie = ref([1,2,3])
-    // function fesClick(){
-        // emit('eventMostrar')
-    // }
-    // function metodoDelEvento(){
-        // emit('m2', 'parametre')
-        // serie.value.push(4)
-    // }
-    // import {ref} from 'vue'
+    function canviarPrioritat(id, novaPrioritat){
+        emit("canviarPrioritat", id, novaPrioritat);
+        tasques.value = llistaTasques;
+    }
 
-    // let llistaPrioritats = ["alta", "mitja", "baixa"]
-    // let descripcio = ref("")
-    // let prioritat = ref("")
-    // const emit = defineEmits(["afegirTasca"])
-    // function afegirTasca(){
-    //     emit("afegirTasca", descripcio, prioritat)
-    //     descripcio.value = ""
-    //     prioritat.value = ""
-    // }
-    let totalTasques = 0
-    let totalTasquesCompletades = 0
-    let filtrat =  ""
-    let llistaTasques = []
-    let filtre = ""
-    let opcionsFiltre = [
-        { id: 1, nom: "" },
-        { id: 2, nom: "Actives" },
-        { id: 3, nom: "Completades" },
-        { id: 4, nom: "Totes" }
-    ]
-    let filtreText = ""
+    function canviarEstat(id, completada){
+        emit("canviarEstat", id, completada )
+
+        llistat.value = prop.llistaTasques;
+    }
+
+    function esborrarTasca(id){
+        emit("esborrarTasca", id)
+        tasques.value = llistaTasques;
+    }
+    
+    // let filtre = ""
+    // let opcionsFiltre = [
+    //     { id: 1, nom: "" },
+    //     { id: 2, nom: "Actives" },
+    //     { id: 3, nom: "Completades" },
+    //     { id: 4, nom: "Totes" }
+    // ]
+    // let filtreText = ""
+
+    // ACI POSAREM LES FUNCIONS QUE SEMPRE ES PUGUEN REPETIR I SIGUIEN INTERNES COM ARA EL FORMATEIG DE DATES I MINUTS 
+    // DES DE L'INICI JA QUE VOLEM QUE ES CALCULE INTERNAMENT NO DE MANERA GLOBAL COM ARA ELS PROXIMS EVENTS CREATS.
+    function formatejarDates(dataTasca) {
+        let f = new Date(dataTasca);
+        if (dataTasca.includes("Z")) { // CONTÉ ZONA HORARIA, RESTAR-LI LA FRANJA HORARIA
+            f = new Date(new Date(dataTasca).getTime() - Math.abs(new Date(dataTasca).getTimezoneOffset() * 60));
+        }
+
+        let stringData = f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear();
+        stringData += " - " + f.getHours() + ":" + ((f.getMinutes() < 10) ? "0" : "") + f.getMinutes() + ":" + ((f.getSeconds() < 10) ? "0" : "") + f.getSeconds();
+
+        return stringData;
+    }
+
+    function minutsDesdeInici(dataTasca) {
+        let creacioTasca = new Date(dataTasca);
+        let dataActual = new Date();
+        let diff_milisegons = dataActual.getTime() - creacioTasca.getTime();
+        let diff_minuts = diff_milisegons / 1000 / 60;
+
+        return parseInt(diff_minuts) + " min.";
+    }
+
 </script>
 
 <template>
-    <!--<h1>{{ props.titol }}</h1>-->
-    <!--<h2>{{ props.text }}</h2>-->
-    <!--<h1>{{ titol }}</h1>
-        <h2>{{ text }}</h2>-->
-    <!--<h1>{{ dades.titol }}</h1>
-    <h2>{{ dades.text }}</h2>-->
-    <!--<button @click="metodoDelEvento"> Fes-me click </button>
-    <button @click="fesClick">click me</button>
-    <ul>
-        <li v-for="num in serie"> {{ num }}</li>
-    </ul>-->
     <!--
-    <label for="descripcio">Descripció</label>
-        <input id="descripcio" class="form-control" type="text" v-model="descripcio" maxlength="100" />
-        <label for="prior">Prioritat</label>
-        <select id="prior" class="form-select" v-model="prioritat">
-            <option v-for="prioritat in llistaPrioritats" :value="prioritat">
-                {{ prioritat }}
-            </option>
-        </select>
-
-        <button class="btn btn-primary" @click="afegirTasca">Afegeix la tasca</button>
-    -->
     <div>
         <div class="header-tasques">
             <label for="mostrar">Filtrar llistat tasques </label>
@@ -87,6 +76,7 @@
             <button class="btn btn-primary" @click="eliminarCompletades">El·liminar totes les tasques completades</button>
         </div>
     </div>
+    -->
     <template v-if="llistaTasques.length">
         <div class="tasca">
             <h2>Llistat TASQUES</h2>
@@ -100,6 +90,7 @@
                 <th>Completar<br>Activar</th>
                 <th>El·liminar</th>
             </tr>
+           
             <tr v-for="(tasca, indice) in llistaTasques">
                 <td class="descripcio">
                     <span v-bind:class="{completada: tasca.completada}">
@@ -110,26 +101,29 @@
                 <td>{{ minutsDesdeInici(tasca.creacio) }}</td>
                 <td>{{ tasca.prioritat }}</td>
                 <td>
-                    <button class="btn btn-danger btn-sm" @click="cambiarPrioritat(tasca.id, 'alta')">Alta</button>
-                    <button class="btn btn-warning btn-sm" @click="cambiarPrioritat(tasca.id, 'mitja')">Mitja</button>
-                    <button class="btn btn-success btn-sm" @click="cambiarPrioritat(tasca.id, 'baixa')">Baixa</button>
+                    <button class="btn btn-danger btn-sm" @click="canviarPrioritat(tasca.id, 'alta')">Alta</button>
+                    <button class="btn btn-warning btn-sm" @click="canviarPrioritat(tasca.id, 'mitja')">Mitja</button>
+                    <button class="btn btn-success btn-sm" @click="canviarPrioritat(tasca.id, 'baixa')">Baixa</button>
                 </td>
                 <td>
                     <button class="btn btn-info btn-sm" v-if="!tasca.completada" @click="canviarEstat(tasca.id, true)">Completar</button>
                     <button class="btn btn-info btn-sm" v-if="tasca.completada" @click="canviarEstat(tasca.id, false)">Activar</button>
                 </td>
                 <td><button class="btn btn-dark btn-sm" @click="esborrarTasca(tasca.id)">El·liminar</button></td>
-            </tr>                
+            </tr>  
+                          
             </table>
         </div>
     </template>
     <template v-else>
         <h2>No existeixen tasques</h2>
     </template>
-
+    
+    <!--
     <div>
         Total tasques: {{ totalTasques }}. Completades: {{ totalTasquesCompletades }} {{ filtrat }}
     </div>
+    -->
 </template>
 
 <style scoped>

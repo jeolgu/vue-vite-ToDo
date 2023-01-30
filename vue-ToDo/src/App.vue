@@ -45,7 +45,56 @@ function afegir(descripcio, prioritat){
   alert("Tasca creada amb éxit");
 }
 
+// INICI PROGRAMA
+let tasques = [];
+if (localStorage.llistaTasques) tasques = JSON.parse(localStorage.llistaTasques);
+
 // LLISTAT DE TASQUES
+
+// CANVIAR PRIORITAT (ALTA MITA o BAIXA)
+function canviarPrioritat(id, novaPrioritat) {
+
+  let novaLlista = tasques;
+  novaLlista.forEach(function(a) {
+      if (a.id === id) {
+          a.prioritat = novaPrioritat;
+      }
+  });
+
+  tasques = novaLlista;
+  localStorage.llistaTasques = JSON.stringify(novaLlista);
+  //reordenarLlistat(novaLlista);
+}
+
+// CANVIAR ESTAT (COMPLETAT-ACTIU, ACTIU-COMPLETAT)
+function canviarEstat(id, completada) {
+
+  let novaLlista = tasques;
+  novaLlista.forEach(function(a) {
+      if (a.id === id) {
+          a.completada = completada;
+      }
+  });
+
+  tasques = novaLlista;
+  localStorage.llistaTasques = JSON.stringify(novaLlista);
+  //reordenarLlistat(novaLlista);
+  //totalTasques = tasques.length;
+  //totalTasquesCompletades = tasques.filter(function(a) { if (a.completada) return true; }).length;
+}
+
+// ESBORRAR UNA TASCA
+function esborrarTasca(id) {
+    // PER  ELIMINAR FILTRAREM TOTS ELS QUE NO COINCIDISQUEN AMB EL id QUE ENVIEM. (D'AQUESTA MANERA FEM UN BORRAT SIMULAT)
+    let arrLlista = JSON.parse(localStorage.llistaTasques);
+    let novaLLista = arrLlista.filter(function(a) { if (a.id != id) return true; });
+
+    tasques = novaLLista;
+    // GUARDEM EN EL LOCALSTORAGE PER A QUE "GUARDE EL BORRAT"
+    localStorage.llistaTasques = JSON.stringify(novaLLista);
+    //totalTasques = tasques.length;
+    //totalTasquesCompletades = tasques.filter(function(a) { if (a.completada) return true; }).length;
+}
 
 </script>
 
@@ -54,20 +103,27 @@ function afegir(descripcio, prioritat){
     <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
-          <!-- APP To-DO en VUE vite-->
-      <NovaTasca @afegirTasca="afegir" />
-      <Tasques />
+      <!-- APP To-DO en VUE vite-->
+      <!--<NovaTasca @afegirTasca="afegir" />-->
+      <Tasques 
+        :llistaTasques="tasques" 
+        @canviarPrioritat="canviarPrioritat" 
+        @canviarEstat="canviarEstat" 
+        @esborrarTasca="esborrarTasca" 
+        ref="text"/>
     </div>
   </header>
 
   <main>
-    <TheWelcome />
+    <!--<TheWelcome />-->
   </main>
 </template>
 
 <style scoped>
 header {
   line-height: 1.5;
+  width: 100vw;
+  height: 100vh;
 }
 
 .logo {
